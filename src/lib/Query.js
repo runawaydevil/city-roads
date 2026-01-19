@@ -14,7 +14,7 @@ export default class Query {
   static Building = 'way[building]';
   /**
    * This gets anything marked as a highway, which has its own pros and cons.
-   * See https://github.com/anvaka/city-roads/issues/20
+   * See https://github.com/runawaydevil/roads/issues/20
    */
   static Road = 'way[highway]';
 

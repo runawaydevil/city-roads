@@ -1,63 +1,54 @@
-# city-roads
+# roads
 
-Render every single road in any city at once: https://anvaka.github.io/city-roads/
+Renderize todas as ruas de qualquer cidade de uma só vez.
 
 ![demo](https://i.imgur.com/6bFhX3e.png)
 
-## How it is made?
+> **Nota:** Este é um fork do [projeto original city-roads](https://github.com/anvaka/city-roads) criado por [Andrei Kashcha](https://github.com/anvaka). Todos os créditos ao autor original pela ideia e implementação inicial.
 
-The data is fetched from OpenStreetMap using [overpass API](http://overpass-turbo.eu/). While that API
-is free (as long as you follow ODbL licenses), it can be rate-limited and sometimes it is slow. After all
-we are downloading thousands of roads within an area!
+## Como funciona?
 
-To improve the performance of download, I indexed ~3,000 cities with population larger than 100,000 people and
-stored into a [very simple](https://github.com/anvaka/index-large-cities/blob/master/proto/place.proto) protobuf format. The cities are stored into a cache in this github [repository](https://github.com/anvaka/index-large-cities).
+Os dados são obtidos do OpenStreetMap usando a [API overpass](http://overpass-turbo.eu/). Embora essa API seja gratuita (desde que você siga as licenças ODbL), ela pode ter limitação de taxa e às vezes é lenta. Afinal, estamos baixando milhares de ruas dentro de uma área!
 
-The name resolution is done by [nominatim](https://nominatim.openstreetmap.org/) - for any query that you type
-into the search box it returns list of area ids. I check for the area id in my list of cached cities first,
-and fallback to overpass if area is not present in cache.
+Para melhorar o desempenho do download, cidades com população maior que 100.000 pessoas são indexadas e armazenadas em um formato protobuf muito simples. As cidades são armazenadas em um cache.
+
+A resolução de nomes é feita pelo [nominatim](https://nominatim.openstreetmap.org/) - para qualquer consulta que você digite na caixa de pesquisa, ele retorna uma lista de IDs de área. Eu verifico primeiro o ID da área na minha lista de cidades em cache e recorro ao overpass se a área não estiver presente no cache.
 
 ## Scripting
 
-Behind simple UI software engineers would also find scripting capabilities. You can develop programs on top
-of the city-roads. A few examples are available in [city-script](https://github.com/anvaka/city-script). Scene
-API is documented here: https://github.com/anvaka/city-roads/blob/main/API.md
+Por trás da interface simples, engenheiros de software também encontrarão recursos de scripting. Você pode desenvolver programas em cima do city-roads. A API de cena está documentada aqui: https://github.com/runawaydevil/roads/blob/main/API.md
 
-Please share your creations and do not hesitate to reach out if you have any questions.
+Por favor, compartilhe suas criações e não hesite em entrar em contato se tiver alguma dúvida.
 
-## Limitations
+## Limitações
 
-The rendering of the city is limited by the browser and video card memory capacity. I was able to render Seattle
-roads without a hiccup on a very old samsung phone, though when I tried Tokyo (with 1.4m segments) the phone
-was very slow.
+A renderização da cidade é limitada pela capacidade de memória do navegador e da placa de vídeo. Consegui renderizar as ruas de Seattle sem problemas em um telefone Samsung muito antigo, mas quando tentei Tóquio (com 1,4 milhão de segmentos), o telefone ficou muito lento.
 
-Selecting area that has millions of roads (e.g. a Washington state) may cause the page to crash even on a
-powerful device.
+Selecionar uma área que tenha milhões de ruas (por exemplo, o estado de Washington) pode fazer com que a página trave mesmo em um dispositivo potente.
 
-Luckily, most of the cities can be rendered without problems, resulting in a beautiful art.
+Felizmente, a maioria das cidades pode ser renderizada sem problemas, resultando em uma bela arte.
 
-## Support
+## Suporte
 
-If you like this work and want to use it in your projects - you are more than welcome to do so!
+Se você gosta deste trabalho e quer usá-lo em seus projetos - você é mais do que bem-vindo para fazê-lo!
 
-Please [let me](https://twitter.com/anvaka) know how it goes. You can also sponsor my projects [here](https://github.com/sponsors/anvaka) - your funds will be dedicated to more awesome and free data visualizations.
-
-## Local development
+## Desenvolvimento local
 
 ``` bash
-# install dependencies
+# instalar dependências
 npm install
 
-# serve with hot reload at localhost:8080
+# servir com hot reload em localhost:8080
 npm run dev
 
-# build for production with minification
+# build para produção com minificação
 npm run build
 
-# build for production and view the bundle analyzer report
+# build para produção e visualizar o relatório do bundle analyzer
 npm run build --report
 ```
 
-## License
+## Licença
 
-The source code is licensed under MIT license
+O código-fonte está licenciado sob a licença MIT
+

@@ -1,122 +1,111 @@
-# Console API
+# API do Console
 
-*This is work in progress and subject to change. Please don't rely on it for anything critical* 
+*Este é um trabalho em andamento e sujeito a alterações. Por favor, não confie nele para nada crítico* 
 
-The `city-roads` provides additional set of operations for the software engineers, allowing them
-to execute arbitrary OpenStreetMap queries and visualize results.
+O `city-roads` fornece um conjunto adicional de operações para engenheiros de software, permitindo que eles executem consultas arbitrárias do OpenStreetMap e visualizem os resultados.
 
-## Methods
+## Métodos
 
-This section describes available console API methods.
+Esta seção descreve os métodos disponíveis na API do console.
 
 ### `scene.load()`
 
-Allows you to load more city roads into the current scene. Before we dive into details, let's explore what
-it takes to render Tokyo and Seattle next to each other. 
+Permite que você carregue mais ruas de cidades na cena atual. Antes de mergulharmos nos detalhes, vamos explorar o que é necessário para renderizar Tóquio e Seattle lado a lado.
 
 ![Tokyo and Seattle](./images/tokyo_and_seattle.png)
 
-First, open [city roads](https://anvaka.github.io/city-roads/)
-and load `Seattle` roads. Then open [developer console](https://developers.google.com/web/tools/chrome-devtools/open) and run the following command:
+Primeiro, abra a aplicação e carregue as ruas de `Seattle`. Em seguida, abra o [console do desenvolvedor](https://developers.google.com/web/tools/chrome-devtools/open) e execute o seguinte comando:
 
 ``` js
-scene.load(Query.Road, 'Tokyo'); // load every single road in Tokyo
+scene.load(Query.Road, 'Tokyo'); // carrega todas as ruas de Tóquio
 ```
 
-Monitor your `Networks` tab and see when request is done. Tokyo bounding box is very large,
-so it will appear very far away on the top left corner. Let's move Tokyo grid next to Seattle:
+Monitore sua aba `Networks` e veja quando a requisição for concluída. A caixa delimitadora de Tóquio é muito grande, então ela aparecerá muito longe no canto superior esquerdo. Vamos mover a grade de Tóquio para perto de Seattle:
 
 ``` js
-// Find the loaded layer with Tokyo:
+// Encontre a camada carregada com Tóquio:
 tokyo = scene.queryLayer('Tokyo');
 
-// Exact offset numbers can be found by experimenting
+// Os números exatos de deslocamento podem ser encontrados experimentando
 tokyo.moveBy(/* xOffset = */ 718000, /* yOffset = */ 745000)
 ```
 
-`scene.load()` has the following signature:
+`scene.load()` tem a seguinte assinatura:
 
 ``` js
 function load(wayFilter: String, loadOptions: LoadOptions);
 ```
 
-* `wayFilter` is used to filter out OpenStreetMap ways. You can find a list of well-known filters [here](https://github.com/anvaka/city-roads/blob/f543a712a0b88b12751aad691baa5eb9d6c0c664/src/lib/Query.js#L6-L24). If you need 
-to know more to create custom filters, here is a complete [language guide](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL). You can also get good insight into key/value distribution for ways by exploring [taginfo](https://taginfo.openstreetmap.org/tags) (make sure to sort by Ways in descending order to get the most popular combinations);
-* `loadOptions` allows you to have granular control over the bounding box of the loaded results. If this
-value is a string, then it is converted to a geocoded area id with nominatim, and then the first match
-is used as a bounding box. This may not be enough sometimes, so you can provide a specific area id, or 
-a bounding box, by passing an object. For example:
+* `wayFilter` é usado para filtrar caminhos do OpenStreetMap. Você pode encontrar uma lista de filtros conhecidos em `src/lib/Query.js`. Se você precisar saber mais para criar filtros personalizados, aqui está um [guia completo da linguagem](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL). Você também pode obter uma boa visão da distribuição de chave/valor para caminhos explorando o [taginfo](https://taginfo.openstreetmap.org/tags) (certifique-se de ordenar por Ways em ordem decrescente para obter as combinações mais populares);
+* `loadOptions` permite que você tenha controle granular sobre a caixa delimitadora dos resultados carregados. Se este valor for uma string, então ele é convertido para um ID de área geocodificado com nominatim, e então a primeira correspondência é usada como caixa delimitadora. Isso pode não ser suficiente às vezes, então você pode fornecer um ID de área específico, ou uma caixa delimitadora, passando um objeto. Por exemplo:
 
 ``` js
-scene.load(Query.Road, {areaId: 3600237385}); // Explicitly set area id to Seattle
+scene.load(Query.Road, {areaId: 3600237385}); // Define explicitamente o ID da área para Seattle
 
-scene.load(Query.Building, { // Load all buildings...
-  bbox: [       // ...in the given bounding box
-    "-15.8477", /* south lat */ 
-    "-47.9841", /* west  lon */ 
-    "-15.7330", /* north lat */ 
-    "-47.7970"  /* east  lon */ 
+scene.load(Query.Building, { // Carrega todos os edifícios...
+  bbox: [       // ...na caixa delimitadora fornecida
+    "-15.8477", /* lat sul */ 
+    "-47.9841", /* lon oeste */ 
+    "-15.7330", /* lat norte */ 
+    "-47.7970"  /* lon leste */ 
   ]});
 ```
 
 ### scene.queryLayerAll()
 
-Returns all layers added to the scene. This is what it takes to assign different colors to each layer:
+Retorna todas as camadas adicionadas à cena. Isto é o que é necessário para atribuir cores diferentes a cada camada:
 
 ``` js
 allLayers = scene.queryLayerAll()
-allLayers[0].color = 'deepskyblue'; // color can be a name.
-allLayers[1].color = 'rgb(255, 12, 43)'; // or a any other expression (rgb, hex, hsl, etc.)
+allLayers[0].color = 'deepskyblue'; // a cor pode ser um nome.
+allLayers[1].color = 'rgb(255, 12, 43)'; // ou qualquer outra expressão (rgb, hex, hsl, etc.)
 ```
 
 ### `scene.clear()`
 
-Clears the current scene, allowing you to start from scratch.
+Limpa a cena atual, permitindo que você comece do zero.
 
 
 ### `scene.saveToPNG(fileName: string)`
 
-To save the current scene as a PNG file run
+Para salvar a cena atual como um arquivo PNG, execute
 
 ``` js
-scene.saveToPNG('hello'); // hello.png is saved
+scene.saveToPNG('hello'); // hello.png é salvo
 ```
 
 ### `scene.saveToSVG(fileName: string, options?: Object)`
 
-This command allows you to save the scene as an SVG file.
+Este comando permite que você salve a cena como um arquivo SVG.
 
 ``` js
-scene.saveToSVG('hello'); // hello.svg is saved
+scene.saveToSVG('hello'); // hello.svg é salvo
 ```
 
-If you are planning to use a pen-plotter or a laser cutter, you can also
-greatly reduce the print time, by removing very short paths from the final
-export. To do so, pass `minLength` option:
+Se você está planejando usar um pen-plotter ou um cortador a laser, você também pode reduzir muito o tempo de impressão, removendo caminhos muito curtos da exportação final. Para fazer isso, passe a opção `minLength`:
 
 ``` js
 scene.saveToSVG('hello', {minLength: 2}); 
-// All paths with length shorter than 2px are removed from the final SVG.
+// Todos os caminhos com comprimento menor que 2px são removidos do SVG final.
 ```
 
-## Examples
+## Exemplos
 
-Here are a few example of working with the API.
+Aqui estão alguns exemplos de trabalho com a API.
 
-### Loading all bikeways in the current city
+### Carregando todas as ciclovias na cidade atual
 
 ``` js
 var bikes = scene.load('way[highway="cycleway"]', {layer: scene.queryLayer()})
-// Make lines 4 pixels wide
+// Torna as linhas com 4 pixels de largura
 bikes.lineWidth = 4
-// and red
+// e vermelhas
 bikes.color = 'red'
 ```
 
-### Loading all bus routes in the current city
+### Carregando todas as rotas de ônibus na cidade atual
 
-This script will get all bus routes in the current city, and render them 4px wide, with
-red color:
+Este script obterá todas as rotas de ônibus na cidade atual e as renderizará com 4px de largura, com cor vermelha:
 
 ``` js
 var areaId = scene.queryLayer().getQueryBounds().areaId;
@@ -132,7 +121,7 @@ bus.color='red';
 bus.lineWidth = 4;
 ```
 
-If you want a specific bus number, pass additional `ref=bus_number`. For example, bus route #24:
+Se você quiser um número de ônibus específico, passe `ref=bus_number` adicional. Por exemplo, rota de ônibus #24:
 
 ``` js
 var areaId = scene.queryLayer().getQueryBounds().areaId;
@@ -147,4 +136,5 @@ out body;>;out skel qt;`
 bus.color = 'green';
 bus.lineWidth = 4;
 ```
+
 

@@ -2,20 +2,20 @@
 <div class='find-place' :class='{centered: boxInTheMiddle }'>
   <div v-if='boxInTheMiddle'>
     <h3 class='site-header'>city roads</h3>
-    <p class='description'>This website renders every single road within a city</p>
+    <p class='description'>Este site renderiza todas as ruas de uma cidade</p>
   </div>
   <form v-on:submit.prevent="onSubmit" class='search-box'>
-      <input class='query-input' v-model='enteredInput' type='text' placeholder='Enter a city name to start' ref='input'>
+      <input class='query-input' v-model='enteredInput' type='text' placeholder='Digite o nome de uma cidade para começar' ref='input'>
       <a type='submit' class='search-submit' href='#' @click.prevent='onSubmit' v-if='enteredInput && !hideInput'>{{mainActionText}}</a>
   </form>
   <div v-if='showWarning' class='prompt message note shadow'>
-    Note: Large cities may require 200MB+ of data transfer and may need a powerful device to render.
+    Nota: Cidades grandes podem requerer 200MB+ de transferência de dados e podem precisar de um dispositivo potente para renderizar.
   </div>
   <div class='results' v-if='!loading'>
     <div v-if='suggestionsLoaded && suggestions.length' class='suggestions shadow'>
       <div class='prompt message'>
-        <div>Select boundaries below to download all roads within</div>
-        <div class='note'>large cities may require 200MB+ of data transfer and a powerful device</div>
+        <div>Selecione os limites abaixo para baixar todas as ruas</div>
+        <div class='note'>cidades grandes podem requerer 200MB+ de transferência de dados e um dispositivo potente</div>
       </div>
       <ul>
         <li v-for='(suggestion, index) in suggestions' :key="index">
@@ -29,29 +29,28 @@
       </ul>
     </div>
     <div v-if='suggestionsLoaded && !suggestions.length && !loading && !error' class='no-results message shadow'>
-      Didn't find matching cities. Try a different query?
+      Não encontrei cidades correspondentes. Tentar outra busca?
     </div>
     <div v-if='noRoads' class='no-results message shadow'>
-      Didn't find any roads. Try a different query?
+      Não encontrei ruas. Tentar outra busca?
     </div>
   </div>
   <div v-if='error' class='error message shadow'>
-    <div>Sorry, we were not able to download data from the OpenStreetMap.
-    It could be very busy at the moment processing other requests. <br/><br/> Please bookmark this website and <a href='#' @click.prevent="retry">try again</a> later?</div>
+    <div>Desculpe, não conseguimos baixar dados do OpenStreetMap.
+    Pode estar muito ocupado no momento processando outras requisições. <br/><br/> Por favor, salve este site e <a href='#' @click.prevent="retry">tente novamente</a> mais tarde?</div>
     <div class='error-links'>
-      <a href='https://twitter.com/anvaka/status/1218971717734789120' title='see what it supposed to do' target="_blank">see how it should have worked</a>
-      <a :href='getBugReportURL(error)' :title='"report error: " + error' target='_blank'>report this bug</a>
+      <a :href='getBugReportURL(error)' :title='"reportar erro: " + error' target='_blank'>reportar este bug</a>
     </div>
   </div>
   <div v-if='loading' class='loading message shadow'>
     <loading-icon></loading-icon>
     <span>{{loading}}</span>
-    <a href="#" @click.prevent='cancelRequest' class='cancel-request'>cancel</a>
+    <a href="#" @click.prevent='cancelRequest' class='cancel-request'>cancelar</a>
     <div class='load-padding' v-if='stillLoading > 0'>
-      Still loading...
+      Ainda carregando...
     </div>
     <div class='load-padding' v-if='stillLoading > 1'>
-      Sorry it takes so long!
+      Desculpe pela demora!
     </div>
   </div>
 </div>
@@ -71,7 +70,7 @@ import LoadOptions from '../lib/LoadOptions.js';
 import Pbf from 'pbf';
 import {place} from '../proto/place.js';
 
-const FIND_TEXT = 'Find City Bounds';
+const FIND_TEXT = 'Buscar Limites da Cidade';
 
 export default {
   name: 'FindPlace',
@@ -94,7 +93,7 @@ export default {
       noRoads: false,
       clicked: false,
       showWarning: hasValidArea, 
-      mainActionText: hasValidArea ? 'Download Area' : FIND_TEXT,
+      mainActionText: hasValidArea ? 'Baixar Área' : FIND_TEXT,
       suggestions: []
     }
   },
@@ -132,7 +131,7 @@ export default {
         return;
       }
 
-      this.loading = 'Searching cities that match your query...'
+      this.loading = 'Buscando cidades que correspondem à sua consulta...'
       findBoundaryByName(this.enteredInput)
         .then(suggestions => {
           this.loading = null;
@@ -160,21 +159,21 @@ export default {
           error.toString() + '\n```\n\n Can you please help?';
       }
 
-      return `https://github.com/anvaka/city-roads/issues/new?title=${title}&body=${encodeURIComponent(body)}`
+      return `https://github.com/runawaydevil/roads/issues/new?title=${title}&body=${encodeURIComponent(body)}`
     },
 
     updateProgress(status) {
       this.stillLoading = 0;
       clearInterval(this.notifyStillLoading);
       if (status.loaded < 0) {
-        this.loading = 'Trying a different server'
+        this.loading = 'Tentando um servidor diferente'
         this.restartLoadingMonitor();
         return;
       }
       if (status.percent !== undefined) {
-        this.loading = 'Loaded ' + Math.round(100 * status.percent) + '% (' + formatNumber(status.loaded) + ' bytes)...';
+        this.loading = 'Carregado ' + Math.round(100 * status.percent) + '% (' + formatNumber(status.loaded) + ' bytes)...';
       } else {
-        this.loading = 'Loaded ' + formatNumber(status.loaded) + ' bytes...';
+        this.loading = 'Carregado ' + formatNumber(status.loaded) + ' bytes...';
       }
     },
 
@@ -210,7 +209,7 @@ export default {
     },
 
     checkCache(suggestion) {
-      this.loading = 'Checking cache...'
+      this.loading = 'Verificando cache...'
       let areaId = suggestion.areaId;
 
       return request(config.areaServer + '/' + areaId + '.pbf', {
@@ -228,7 +227,7 @@ export default {
     },
 
     useOSM(suggestion) {
-      this.loading = 'Connecting to OpenStreetMap...'
+      this.loading = 'Conectando ao OpenStreetMap...'
       
       // it may take a while to load data. 
       this.restartLoadingMonitor();

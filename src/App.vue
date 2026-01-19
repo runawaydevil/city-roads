@@ -3,13 +3,13 @@
   <div id="app">
     <div v-if='placeFound'>
       <div class='controls'>
-        <a href="#" class='print-button' @click.prevent='toggleSettings'>Customize...</a>
-        <a href="#" class='try-another' @click.prevent='startOver'>Try another city</a>
+        <a href="#" class='print-button' @click.prevent='toggleSettings'>Personalizar...</a>
+        <a href="#" class='try-another' @click.prevent='startOver'>Tentar outra cidade</a>
       </div>
       <div v-if='showSettings' class='print-window'>
-        <h3>Display</h3>
+        <h3>Exibição</h3>
         <div class='row'>
-          <div class='col'>Colors</div>
+          <div class='col'>Cores</div>
           <div class='col colors c-2'>
             <div v-for='layer in layers' :key='layer.name' class='color-container'>
               <color-picker v-model='layer.color' @change='layer.changeColor'></color-picker>
@@ -18,52 +18,49 @@
           </div>
         </div>
 
-        <h3>Export</h3>
+        <h3>Exportar</h3>
         <div class='row'>
-          <a href='#' @click.prevent='zazzleMugPrint()' class='col'>Onto a mug</a> 
+          <a href='#' @click.prevent='zazzleMugPrint()' class='col'>Em uma caneca</a> 
           <span class='col c-2'>
-            Print what you see onto a mug. <br/>Get a unique gift of your favorite city.
+            Imprima o que você vê em uma caneca. <br/>Ganhe um presente único da sua cidade favorita.
           </span>
         </div>
         <div class='preview-actions message' v-if='zazzleLink || generatingPreview'>
             <div v-if='zazzleLink' class='padded popup-help'>
-              If your browser has blocked the new window, <br/>please <a :href='zazzleLink' target='_blank'>click here</a>
-              to open it.
+              Se seu navegador bloqueou a nova janela, <br/>por favor <a :href='zazzleLink' target='_blank'>clique aqui</a>
+              para abrir.
             </div>
             <div v-if='generatingPreview' class='loading-container'>
               <loading-icon></loading-icon>
-              Generating preview url...
+              Gerando URL de visualização...
             </div>
         </div>
         <div class='row'>
-          <a href='#'  @click.prevent='toPNGFile' class='col'>As an image (.png)</a> 
+          <a href='#'  @click.prevent='toPNGFile' class='col'>Como imagem (.png)</a> 
           <span class='col c-2'>
-            Save the current screen as a raster image.
+            Salvar a tela atual como imagem raster.
           </span>
         </div>
         
         <div class='row'>
-          <a href='#'  @click.prevent='toSVGFile' class='col'>As a vector (.svg)</a> 
+          <a href='#'  @click.prevent='toSVGFile' class='col'>Como vetor (.svg)</a> 
           <span class='col c-2'>
-            Save the current screen as a vector image.
+            Salvar a tela atual como imagem vetorial.
           </span>
         </div>
         <div v-if='false' class='row'>
-          <a href='#' @click.prevent='toProtobuf' class='col'>To a .PBF file</a> 
+          <a href='#' @click.prevent='toProtobuf' class='col'>Para arquivo .PBF</a> 
           <span class='col c-2'>
-            Save the current data as a protobuf message. For developer use only.
+            Salvar os dados atuais como mensagem protobuf. Apenas para uso de desenvolvedores.
           </span>
         </div>
 
-        <h3>About</h3>
+        <h3>Sobre</h3>
         <div>
-          <p>This website was created by <a href='https://twitter.com/anvaka' target='_blank'>@anvaka</a>.
-          It downloads roads from OpenStreetMap and renders them with WebGL.
+          <p>Esta aplicação baixa ruas do OpenStreetMap e as renderiza com WebGL.
           </p>
           <p>
-           You can find the entire <a href='https://github.com/anvaka/city-roads'>source code here</a>. 
-           If you love this website you can also <a href='https://www.paypal.com/paypalme2/anvakos/3'>buy me a coffee</a> or 
-           <a href='https://www.patreon.com/anvaka'>support me on Patreon</a>, but you don't have to.
+           Você pode encontrar o <a href='https://github.com/runawaydevil/roads'>código-fonte completo aqui</a>.
           </p>
         </div>
       </div>
@@ -71,7 +68,7 @@
   </div>
 
   <editable-label v-if='placeFound' v-model='name' class='city-name' :printable='true' :style='{color: labelColorRGBA}' :overlay-manager='overlayManager'></editable-label>
-  <div v-if='placeFound' class='license printable can-drag' :style='{color: labelColorRGBA}'>data <a href='https://www.openstreetmap.org/about/' target="_blank" :style='{color: labelColorRGBA}'>© OpenStreetMap</a></div>
+  <div v-if='placeFound' class='license printable can-drag' :style='{color: labelColorRGBA}'>dados <a href='https://www.openstreetmap.org/about/' target="_blank" :style='{color: labelColorRGBA}'>© OpenStreetMap</a></div>
 </template>
 
 <script>
@@ -214,7 +211,7 @@ export default {
         let name = layer.id;
         if (!name) {
           lastLayer += 1;
-          name = 'lines ' + lastLayer;
+          name = 'linhas ' + lastLayer;
         }
         let layerColor = tinycolor.fromRatio(layer.color);
         newLayers.push(new ColorLayer(name, layerColor, newColor => {
@@ -226,8 +223,8 @@ export default {
       });
 
       newLayers.push(
-        new ColorLayer('background', this.backgroundColor, this.setBackgroundColor),
-        new ColorLayer('labels', this.labelColor, newColor => this.labelColor = newColor)
+        new ColorLayer('fundo', this.backgroundColor, this.setBackgroundColor),
+        new ColorLayer('rótulos', this.labelColor, newColor => this.labelColor = newColor)
       );
 
       this.layers = newLayers;

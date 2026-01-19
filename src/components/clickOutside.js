@@ -1,6 +1,5 @@
 // Based on https://github.com/ElemeFE/element/blob/dev/src/utils/clickoutside.js
 // The MIT License (MIT), Copyright (c) 2016 ElemeFE
-// (C) 2022 anvaka
 const nodeList = [];
 const ctx = '@@clickoutsideContext';
 
